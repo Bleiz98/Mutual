@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35931.197 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "mutual.client", "mutual.client\mutual.client.esproj", "{E73EF567-A1B1-6AD6-EFE8-05D55A7727F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutual.Server", "Mutual.Server\Mutual.Server.csproj", "{FCD7B4AC-0307-467B-8256-500D29D3D520}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E73EF567-A1B1-6AD6-EFE8-05D55A7727F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E73EF567-A1B1-6AD6-EFE8-05D55A7727F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E73EF567-A1B1-6AD6-EFE8-05D55A7727F2}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{E73EF567-A1B1-6AD6-EFE8-05D55A7727F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E73EF567-A1B1-6AD6-EFE8-05D55A7727F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E73EF567-A1B1-6AD6-EFE8-05D55A7727F2}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{FCD7B4AC-0307-467B-8256-500D29D3D520}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCD7B4AC-0307-467B-8256-500D29D3D520}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCD7B4AC-0307-467B-8256-500D29D3D520}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCD7B4AC-0307-467B-8256-500D29D3D520}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C4FFF07F-6292-429F-A5DB-AD72AFDDDAAA}
+	EndGlobalSection
+EndGlobal
