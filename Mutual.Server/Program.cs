@@ -4,6 +4,8 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Mutual.server.Data;
+using Humanizer.Localisation;
+using Humanizer;
 namespace Mutual.Server
 {
     public class Program
@@ -21,12 +23,14 @@ namespace Mutual.Server
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            // Configurar CORS (ANTES de builder.Build())
+
+            //El CORS(Cross-Origin Resource Sharing) sirve para permitir que tu frontend(React en Mutual.Client)
+            //se comunique con tu backend(Mutual.Server)
             builder.Services.AddCors(options =>
             {
-                options.AddDefaultPolicy(policy =>
+                options.AddPolicy("FrontendClient", policy =>
                 {
-                    policy.AllowAnyOrigin()
+                    policy.WithOrigins("http://localhost:61494") // el origen de React
                           .AllowAnyHeader()
                           .AllowAnyMethod();
                 });
@@ -59,10 +63,11 @@ namespace Mutual.Server
                 app.UseSwaggerUI();
             }
 
-            app.UseCors();
+            app.UseCors("FrontendClient");
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();

@@ -47,29 +47,6 @@ export default function Registro() {
                         </div>
 
                         <div className="mb-3">
-                            <label className="form-label">Usuario</label>
-                            <input
-                                name="username"
-                                className="form-control"
-                                value={formData.username}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-
-                        <div className="mb-3">
-                            <label className="form-label">Contraseña</label>
-                            <input
-                                type="password"
-                                name="passwordHash"
-                                className="form-control"
-                                value={formData.passwordHash}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-
-                        <div className="mb-3">
                             <label className="form-label">Rol</label>
                             <input
                                 name="rol"

@@ -24,25 +24,18 @@ namespace Mutual.Server.Controllers
             _config = config;
         }
 
-        [HttpPost]
-        public IActionResult CrearPersona([FromBody] Persona persona)
-        {
-            // Aquí guardarías a la persona en la base de datos (por ahora solo devolvemos la persona como ejemplo)
-            return Ok(persona);
-        }
-
         [HttpPost("registro")]
         public async Task<IActionResult> RegistrarPersona([FromBody] PersonaRegistro registro)
         {
-            //var hashedPassword = BCrypt.Net.BCrypt.HashPassword(registro.PasswordHash);
-            var hashedPassword = registro.PasswordHash;
-
             var nuevaPersona = new Persona
             {
                 DniCuit = registro.DniCuit,
-                Username = registro.Username,
-                PasswordHash = hashedPassword,
                 Rol = registro.Rol,
+                NombreRazonSocial = registro.NombreRazonSocial,
+                Direccion = registro.Direccion,
+                Telefono = registro.Telefono,
+                Email = registro.Email,
+
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
                 //Activo = true
@@ -54,110 +47,43 @@ namespace Mutual.Server.Controllers
             return Ok(nuevaPersona);
         }
 
-        //[HttpPost("login")]//Version de login simpre
-        //public async Task<IActionResult> Login([FromBody] PersonaLogin login)
-        //{
-        //    var persona = await _context.Personas
-        //        .FirstOrDefaultAsync(p => p.Username == login.Username);
-
-        //    if (persona == null)
-        //    {
-        //        return Unauthorized(new { mensaje = "Usuario no encontrado" });
-        //    }
-
-        //    // Comparar hashes directamente si ya están hasheados
-        //    if (persona.PasswordHash != login.PasswordHash)
-        //    {
-        //        return Unauthorized(new { mensaje = "Contraseña incorrecta" });
-        //    }
-
-        //    // Opcional: Generar token JWT o retornar datos básicos
-        //    return Ok(new
-        //    {
-        //        mensaje = "Login exitoso",
-        //        persona.Id,
-        //        persona.Username,
-        //        persona.Rol
-        //    });
-        //}
-
-        //[HttpPost("login")]//Version de login q verifica contrseña hasheada
-        //public async Task<IActionResult> Login([FromBody] PersonaLogin login)
-        //{
-        //    var persona = await _context.Personas
-        //        .FirstOrDefaultAsync(p => p.Username == login.Username);
-
-        //    if (persona == null)
-        //    {
-        //        return Unauthorized(new { mensaje = "Usuario no encontrado" });
-        //    }
-
-        //    // Verificar la contraseña con BCrypt
-        //    bool passwordValida = BCrypt.Net.BCrypt.Verify(login.PasswordHash, persona.PasswordHash);
-
-        //    if (!passwordValida)
-        //    {
-        //        return Unauthorized(new { mensaje = "Contraseña incorrecta" });
-        //    }
-
-        //    return Ok(new
-        //    {
-        //        persona.Id,
-        //        persona.Username,
-        //        persona.Rol
-        //    });
-        //}
-
-        [HttpPost("login")]//Version de login q verifica contrseña hasheada, y retorna un token con los datos ingresado en Claim
-        public async Task<IActionResult> Login([FromBody] PersonaLogin login)
+        [HttpPut("personas/{id}")]
+        public async Task<IActionResult> ActualizarPersona(int id, [FromBody] PersonaRegistro actualizacion)
         {
-            var persona = await _context.Personas
-                .FirstOrDefaultAsync(p => p.Username == login.Username);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
+            var persona = await _context.Personas.FindAsync(id);
             if (persona == null)
-                return Unauthorized(new { mensaje = "Usuario no encontrado" });
+                return NotFound(new { mensaje = "Persona no encontrada" });
 
-            if (!BCrypt.Net.BCrypt.Verify(login.PasswordHash, persona.PasswordHash))
-                return Unauthorized(new { mensaje = "Contraseña incorrecta" });
+            persona.DniCuit = actualizacion.DniCuit;
+            persona.Rol = actualizacion.Rol;
+            persona.UpdatedAt = DateTime.Now;
 
-            var claims = new[]//Aca se ingresan los datos q quieras q se guarden en el token
-            {
-                new Claim("id", persona.Id.ToString()),
-                new Claim("username", persona.Username),
-                new Claim("rol", persona.Rol)
-            };
+            _context.Personas.Update(persona);
+            await _context.SaveChangesAsync();
 
-            var token = GenerarJwtToken(claims);
-
-            return Ok(new { token });//solamente retornara un token q sera guardado temporalmente en una session
+            return Ok(new { mensaje = "Persona actualizada correctamente", persona });
         }
-        private string GenerarJwtToken(IEnumerable<Claim> claims)//genera un token, y en este se ingresaran los datos q este en Claim
+
+
+        [HttpGet("personas")]
+        public async Task<IActionResult> GetPersonas()
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-                issuer: _config["Jwt:Issuer"],
-                audience: _config["Jwt:Audience"],
-                claims: claims,
-                expires: DateTime.UtcNow.AddHours(2),
-                signingCredentials: creds
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            var personas = await _context.Personas.ToListAsync();
+            return Ok(personas);
         }
 
-        //[Authorize]
-        //[HttpGet("perfil")]
-        //public IActionResult GetPerfil()
-        //{
-        //    var userClaims = HttpContext.User.Claims;
+        [HttpGet("personas/{id}")]
+        public async Task<IActionResult> GetPersonaPorId(int id)
+        {
+            var persona = await _context.Personas.FindAsync(id);
+            if (persona == null)
+                return NotFound(new { mensaje = "Persona no encontrada" });
 
-        //    var id = userClaims.FirstOrDefault(c => c.Type == "id")?.Value;
-        //    var username = userClaims.FirstOrDefault(c => c.Type == "username")?.Value;
-        //    var rol = userClaims.FirstOrDefault(c => c.Type == "rol")?.Value;
+            return Ok(persona);
+        }
 
-        //    return Ok(new { id, username, rol });
-        //}
     }
 }

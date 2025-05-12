@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-
 namespace Mutual.Server.Models
 {
     [Table("Persona")]
@@ -13,12 +12,6 @@ namespace Mutual.Server.Models
 
         [Column("dni_cuit")]
         public int DniCuit { get; set; }
-
-        [Column("username")]
-        public string Username { get; set; }
-
-        [Column("password_hash")]
-        public string PasswordHash { get; set; }
 
         [Column("nombre_razon_social")]
         public string? NombreRazonSocial { get; set; }
@@ -44,8 +37,8 @@ namespace Mutual.Server.Models
         [Column("fecha_afiliacion")]
         public DateTime? FechaAfiliacion { get; set; }
 
-        //[Column("activo")]
-        //public bool Activo { get; set; }
+        [Column("activo")]
+        public bool Activo { get; set; }
 
         [Column("personal_referencia_id")]
         public int? PersonalReferenciaId { get; set; }
